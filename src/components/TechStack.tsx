@@ -11,31 +11,80 @@ import {
   RapierRigidBody,
 } from "@react-three/rapier";
 
-const textureLoader = new THREE.TextureLoader();
 const base = import.meta.env.BASE_URL;
-const imageUrls = [
-  `${base}images/python.webp`,
-  `${base}images/cpp.webp`,
-  `${base}images/react2.webp`,
-  `${base}images/next2.webp`,
-  `${base}images/fastapi.webp`,
-  `${base}images/django.webp`,
-  `${base}images/express.webp`,
-  `${base}images/tensorflow.webp`,
-  `${base}images/postgresql.webp`,
-  `${base}images/mysql.webp`,
-  `${base}images/docker.webp`,
-  `${base}images/azure.webp`,
-  `${base}images/tailwind.webp`,
-  `${base}images/javascript.webp`,
-  `${base}images/git.webp`,
+const logoUrls = [
+  `${base}logos/python.jpg`,
+  `${base}logos/C.jpg`,
+  `${base}logos/c++.jpg`,
+  `${base}logos/js.jpg`,
+  `${base}logos/html.jpg`,
+  `${base}logos/react.jpg`,
+  `${base}logos/next.jpg`,
+  `${base}logos/vite.jpg`,
+  `${base}logos/tailwind_css.webp`,
+  `${base}logos/node.jpg`,
+  `${base}logos/fastapi.png`,
+  `${base}logos/django.jpg`,
+  `${base}logos/postgresql.jpg`,
+  `${base}logos/docker.jpg`,
+  `${base}logos/azure.jpg`,
+  `${base}logos/github.jpg`,
+  `${base}logos/tensorflow.webp`,
+  `${base}logos/pytorch.jpg`,
+  `${base}logos/sckit_learn.jpg`,
+  `${base}logos/xgboost.jpg`,
+  `${base}logos/numpy.jpg`,
+  `${base}logos/pandas.jpg`,
+  `${base}logos/scipy.jpg`,
+  `${base}logos/gemini.jpg`,
 ];
-const textures = imageUrls.map((url) => textureLoader.load(url));
+
+/** Builds a 2:1 white-padded equirectangular sphere texture so every logo wraps cleanly without stretching or dark alpha artifacts. */
+function createSphereTexture(url: string): THREE.CanvasTexture {
+  const width = 1024;
+  const height = 512;
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 4;
+
+  const img = new Image();
+  img.onload = () => {
+    if (!ctx) return;
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+
+    const maxLogoSize = height * 0.36;
+    const aspect = img.naturalWidth / Math.max(1, img.naturalHeight);
+    const drawW = aspect >= 1 ? maxLogoSize : maxLogoSize * aspect;
+    const drawH = aspect >= 1 ? maxLogoSize / aspect : maxLogoSize;
+
+    // Paint the logo every 90 deg around the equator so a face always points toward the camera
+    for (const u of [0.125, 0.375, 0.625, 0.875]) {
+      const cx = width * u;
+      ctx.drawImage(img, cx - drawW / 2, height * 0.5 - drawH / 2, drawW, drawH);
+    }
+    texture.needsUpdate = true;
+  };
+  img.src = url;
+
+  return texture;
+}
 
 const sphereGeometry = new THREE.SphereGeometry(1, 28, 28);
 
-const spheres = [...Array(30)].map(() => ({
-  scale: [0.7, 1, 0.8, 1, 1][Math.floor(Math.random() * 5)],
+const sphereScales = [0.7, 1, 0.8, 1, 1];
+const spheres = [...Array(30)].map((_, i) => ({
+  scale: sphereScales[i % sphereScales.length],
+  materialIndex: i % logoUrls.length,
 }));
 
 type SphereProps = {
@@ -160,18 +209,18 @@ const TechStack = () => {
     };
   }, []);
   const materials = useMemo(() => {
-    return textures.map(
-      (texture) =>
-        new THREE.MeshPhysicalMaterial({
-          map: texture,
-          emissive: "#ffffff",
-          emissiveMap: texture,
-          emissiveIntensity: 0.3,
-          metalness: 0.5,
-          roughness: 1,
-          clearcoat: 0.1,
-        })
-    );
+    return logoUrls.map((url) => {
+      const texture = createSphereTexture(url);
+      return new THREE.MeshPhysicalMaterial({
+        map: texture,
+        emissive: "#ffffff",
+        emissiveMap: texture,
+        emissiveIntensity: 0.3,
+        metalness: 0.5,
+        roughness: 1,
+        clearcoat: 0.1,
+      });
+    });
   }, []);
 
   return (
@@ -197,11 +246,11 @@ const TechStack = () => {
         <directionalLight position={[0, 5, -4]} intensity={2} />
         <Physics gravity={[0, 0, 0]}>
           <Pointer isActive={isActive} />
-          {spheres.map((props, i) => (
+          {spheres.map(({ scale, materialIndex }, i) => (
             <SphereGeo
               key={i}
-              {...props}
-              material={materials[Math.floor(Math.random() * materials.length)]}
+              scale={scale}
+              material={materials[materialIndex]}
               isActive={isActive}
             />
           ))}
