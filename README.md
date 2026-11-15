@@ -2,7 +2,7 @@
 
 Interactive 3D developer portfolio built with React, TypeScript, Three.js, React Three Fiber, Rapier Physics, and GSAP. Showcases my profile as a **Full-Stack Developer, AI/ML Engineer, and Medical AI & Hybrid Quantum ML Researcher** at Shoolini University.
 
-
+![Portfolio Preview](public/images/preview.png)
 
 ## Table of Contents
 
