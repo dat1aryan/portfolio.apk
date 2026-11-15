@@ -46,11 +46,11 @@ const Navbar = () => {
           APK
         </a>
         <a
-          href="https://www.linkedin.com/in/aryanpankajkumar/"
+          href="https://mail.google.com/mail/?view=cm&fs=1&to=aryanpk099@gmail.com"
           className="navbar-connect"
           data-cursor="disable"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
           aryanpk099@gmail.com
         </a>
