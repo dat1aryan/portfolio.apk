@@ -2,12 +2,7 @@
 
 Interactive 3D developer portfolio built with React, TypeScript, Three.js, React Three Fiber, Rapier Physics, and GSAP. Showcases my profile as a **Full-Stack Developer, AI/ML Engineer, and Medical AI & Hybrid Quantum ML Researcher** at Shoolini University.
 
-- **Live Site (GitHub Pages):** [https://dat1aryan.github.io/portfolio.apk/](https://dat1aryan.github.io/portfolio.apk/)
-- **GitHub:** [https://github.com/dat1aryan](https://github.com/dat1aryan)
-- **LinkedIn:** [https://www.linkedin.com/in/aryanpankajkumar/](https://www.linkedin.com/in/aryanpankajkumar/)
-- **YouTube:** [https://www.youtube.com/@Stillmortis2k](https://www.youtube.com/@Stillmortis2k)
-- **Instagram:** [https://www.instagram.com/ig_apk/](https://www.instagram.com/ig_apk/)
-- **Email:** [aryanpk099@gmail.com](mailto:aryanpk099@gmail.com)
+
 
 ## Table of Contents
 
