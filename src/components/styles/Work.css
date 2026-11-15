@@ -41,6 +41,9 @@
 }
 
 .carousel-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  max-width: 100%;
   min-width: 100%;
   flex-shrink: 0;
   box-sizing: border-box;
@@ -56,6 +59,7 @@
 
 .carousel-info {
   flex: 1;
+  min-width: 0;
   display: flex;
   gap: 30px;
   align-items: flex-start;
@@ -109,6 +113,7 @@
 
 .carousel-image-wrapper {
   flex: 1;
+  min-width: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -184,29 +189,34 @@
 .work-image {
   display: flex;
   width: 100%;
+  max-width: 100%;
   justify-content: center;
 }
 
 .work-image-in {
   position: relative;
+  display: inline-block;
+  max-width: 100%;
+  cursor: pointer;
 }
 
 .work-link {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  bottom: 12px;
+  right: 12px;
   background-color: var(--backgroundColor);
-  width: 50px;
-  border-radius: 50px;
-  height: 50px;
+  width: 48px;
+  border-radius: 50%;
+  height: 48px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 25px;
+  font-size: 24px;
   box-shadow: 0px 0px 10px 0px rgba(255, 255, 255, 0.5),
     inset 0px 0px 10px 0px #393939;
-  transition: 0.3s;
-  opacity: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  opacity: 0.85;
+  pointer-events: none;
 }
 
 .work-image a:hover {
@@ -215,6 +225,7 @@
 
 .work-image a:hover .work-link {
   opacity: 1;
+  transform: scale(1.06);
 }
 
 .work-image video {
@@ -228,8 +239,12 @@
 }
 
 .work-image img {
-  max-width: 100%;
+  display: block;
+  width: 100%;
+  max-width: 560px;
   max-height: 400px;
+  height: auto;
+  object-fit: contain;
   border-radius: 8px;
 }
 
@@ -247,6 +262,10 @@
 @media only screen and (max-width: 1400px) {
   .work-section h2 {
     font-size: 50px;
+  }
+
+  .carousel-slide {
+    padding: 50px 72px;
   }
 
   .carousel-details h4 {
@@ -322,7 +341,7 @@
   }
 
   .carousel-slide {
-    padding: 30px 0;
+    padding: 30px 56px;
   }
 
   .work-image img {
