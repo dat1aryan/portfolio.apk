@@ -1,3 +1,4 @@
+import ShimmerText from "./ui/shimmer-text";
 import "./styles/About.css";
 
 const About = () => {
@@ -5,16 +6,24 @@ const About = () => {
     <div className="about-section" id="about">
       <div className="about-me">
         <h3 className="title">About Me</h3>
+        <div className="about-quote-wrap">
+          <ShimmerText
+            className="about-quote-shimmer"
+            duration={2.2}
+            delay={0.4}
+          >
+            Talent without hard work is nothing.
+          </ShimmerText>
+        </div>
         <p className="para">
-          Computer Science and Engineering undergraduate specialising in
-          Artificial Intelligence at Shoolini University (First-Year CGPA:
-          9.77/10), with practical experience in full-stack application
-          development, applied AI/ML, and technical research. Experienced in
-          building web-based prototypes using React, FastAPI, and Python, with
-          research interests in Medical AI and Hybrid Quantum Machine Learning
-          (HQML). Currently strengthening problem-solving through Data
-          Structures &amp; Algorithms, advancing expertise in deep learning, and
-          contributing to open-source projects on GitHub.
+          Currently an undergraduate in Computer Science and Engineering,
+          specialising in Artificial Intelligence at Shoolini University.
+          Interested in AI/ML, full-stack and cloud development, and research in
+          Medical AI and Quantum Machine Learning.
+        </p>
+        <p className="para">
+          Outside academics, I&apos;m a passionate gamer, an acoustic guitar
+          enthusiast, and someone who finds joy in the little things.
         </p>
       </div>
     </div>

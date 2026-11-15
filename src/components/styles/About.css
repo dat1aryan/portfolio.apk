@@ -28,6 +28,32 @@
   font-weight: 600;
   line-height: 36px;
   letter-spacing: 1px;
+  margin: 0 0 16px 0;
+}
+
+.about-me p:last-child {
+  margin-bottom: 0;
+}
+
+.about-quote-wrap {
+  margin: 0 0 16px 0;
+}
+
+.about-quote-wrap .overflow-hidden {
+  overflow: hidden;
+}
+
+.about-me .about-quote-shimmer {
+  --shimmer-contrast: #ffffff;
+  display: inline-block;
+  padding-right: 0.15em;
+  font-style: italic;
+  font-synthesis: style;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 30px;
+  letter-spacing: 1px;
+  color: rgba(234, 229, 236, 0.52);
 }
 
 @media only screen and (min-width: 600px) {
@@ -59,13 +85,21 @@
     width: 50%;
   }
   .about-me p {
-    font-size: 1.9vw;
-    line-height: 2.3vw;
+    font-size: 1.65vw;
+    line-height: 2.05vw;
+  }
+  .about-me .about-quote-shimmer {
+    font-size: 1.35vw;
+    line-height: 1.75vw;
   }
 }
 @media only screen and (min-width: 1950px) {
   .about-me p {
-    font-size: 2.5rem;
-    line-height: 2.7rem;
+    font-size: 2.3rem;
+    line-height: 2.6rem;
+  }
+  .about-me .about-quote-shimmer {
+    font-size: 1.9rem;
+    line-height: 2.2rem;
   }
 }
