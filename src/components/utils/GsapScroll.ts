@@ -1,12 +1,67 @@
 import * as THREE from "three";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+let intensityInterval: number | undefined;
+let flickerTimeline: gsap.core.Timeline | null = null;
+let charTimelines: gsap.core.Timeline[] = [];
+let careerTimelines: gsap.core.Timeline[] = [];
+
+export function cleanupCharTimelines() {
+  if (intensityInterval !== undefined) {
+    window.clearInterval(intensityInterval);
+    intensityInterval = undefined;
+  }
+  if (flickerTimeline) {
+    flickerTimeline.kill();
+    flickerTimeline = null;
+  }
+  [...charTimelines].reverse().forEach((tl) => {
+    tl.progress(0);
+    tl.scrollTrigger?.kill();
+    tl.kill();
+  });
+  charTimelines = [];
+  gsap.set(
+    [
+      ".about-me",
+      ".landing-container",
+      ".about-section",
+      ".character-model",
+      ".whatIDO",
+      ".what-box-in",
+      ".character-rim",
+    ],
+    { clearProps: "transform,opacity,pointerEvents,display,scale" }
+  );
+}
+
+export function cleanupAllTimelines() {
+  [...careerTimelines].reverse().forEach((tl) => {
+    tl.progress(0);
+    tl.scrollTrigger?.kill();
+    tl.kill();
+  });
+  careerTimelines = [];
+  gsap.set(
+    [".career-section", ".career-timeline", ".career-info-box", ".career-dot"],
+    { clearProps: "transform,opacity,maxHeight,animationIterationCount" }
+  );
+}
+
+export function cleanupGsapScroll() {
+  cleanupCharTimelines();
+  cleanupAllTimelines();
+}
 
 export function setCharTimeline(
   character: THREE.Object3D<THREE.Object3DEventMap> | null,
   camera: THREE.PerspectiveCamera
 ) {
+  cleanupCharTimelines();
+
   let intensity: number = 0;
-  setInterval(() => {
+  intensityInterval = window.setInterval(() => {
     intensity = Math.random();
   }, 200);
   const tl1 = gsap.timeline({
@@ -36,6 +91,8 @@ export function setCharTimeline(
       invalidateOnRefresh: true,
     },
   });
+  charTimelines.push(tl1, tl2, tl3);
+
   let screenLight: any, monitor: any;
   character?.children.forEach((object: any) => {
     if (object.name === "Plane004") {
@@ -52,11 +109,13 @@ export function setCharTimeline(
       object.material.transparent = true;
       object.material.opacity = 0;
       object.material.emissive.set("#B0F5EA");
-      gsap.timeline({ repeat: -1, repeatRefresh: true }).to(object.material, {
-        emissiveIntensity: () => intensity * 8,
-        duration: () => Math.random() * 0.6,
-        delay: () => Math.random() * 0.1,
-      });
+      flickerTimeline = gsap
+        .timeline({ repeat: -1, repeatRefresh: true })
+        .to(object.material, {
+          emissiveIntensity: () => intensity * 8,
+          duration: () => Math.random() * 0.6,
+          delay: () => Math.random() * 0.1,
+        });
       screenLight = object;
     }
   });
@@ -85,28 +144,44 @@ export function setCharTimeline(
           { pointerEvents: "none", x: "-12%", delay: 2, duration: 5 },
           0
         )
-        .to(character.rotation, { y: 0.92, x: 0.12, delay: 3, duration: 3 }, 0)
-        .to(neckBone!.rotation, { x: 0.6, delay: 2, duration: 3 }, 0)
-        .to(monitor.material, { opacity: 1, duration: 0.8, delay: 3.2 }, 0)
-        .to(screenLight.material, { opacity: 1, duration: 0.8, delay: 4.5 }, 0)
-        .fromTo(
-          ".what-box-in",
-          { display: "none" },
-          { display: "flex", duration: 0.1, delay: 6 },
+        .to(character.rotation, { y: 0.92, x: 0.12, delay: 3, duration: 3 }, 0);
+
+      if (neckBone) {
+        tl2.to(neckBone.rotation, { x: 0.6, delay: 2, duration: 3 }, 0);
+      }
+      if (monitor?.material) {
+        tl2.to(monitor.material, { opacity: 1, duration: 0.8, delay: 3.2 }, 0);
+      }
+      if (screenLight?.material) {
+        tl2.to(
+          screenLight.material,
+          { opacity: 1, duration: 0.8, delay: 4.5 },
           0
-        )
-        .fromTo(
+        );
+      }
+
+      tl2.fromTo(
+        ".what-box-in",
+        { display: "none" },
+        { display: "flex", duration: 0.1, delay: 6 },
+        0
+      );
+
+      if (monitor?.position) {
+        tl2.fromTo(
           monitor.position,
           { y: -10, z: 2 },
           { y: 0, z: 0, delay: 1.5, duration: 3 },
           0
-        )
-        .fromTo(
-          ".character-rim",
-          { opacity: 1, scaleX: 1.4 },
-          { opacity: 0, scale: 0, y: "-70%", duration: 5, delay: 2 },
-          0.3
         );
+      }
+
+      tl2.fromTo(
+        ".character-rim",
+        { opacity: 1, scaleX: 1.4 },
+        { opacity: 0, scale: 0, y: "-70%", duration: 5, delay: 2 },
+        0.3
+      );
 
       tl3
         .fromTo(
@@ -128,11 +203,14 @@ export function setCharTimeline(
         },
       });
       tM2.to(".what-box-in", { display: "flex", duration: 0.1, delay: 0 }, 0);
+      charTimelines.push(tM2);
     }
   }
 }
 
 export function setAllTimeline() {
+  cleanupAllTimelines();
+
   const careerTimeline = gsap.timeline({
     scrollTrigger: {
       trigger: ".career-section",
@@ -142,6 +220,7 @@ export function setAllTimeline() {
       invalidateOnRefresh: true,
     },
   });
+  careerTimelines.push(careerTimeline);
   careerTimeline
     .fromTo(
       ".career-timeline",
@@ -188,4 +267,5 @@ export function setAllTimeline() {
       0
     );
   }
+  ScrollTrigger.refresh();
 }
