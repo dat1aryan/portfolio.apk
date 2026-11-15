@@ -22,7 +22,7 @@ const Contact = () => {
             <h4>Education</h4>
             <p>
               B.Tech. CSE (Artificial Intelligence), Shoolini University —
-              2025–Present
+              2025 - Present
             </p>
           </div>
           <div className="contact-box">
